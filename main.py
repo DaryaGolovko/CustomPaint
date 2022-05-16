@@ -1,5 +1,6 @@
 from tkinter import *
 import Figures
+import Figure
 from Plugin import Trapeze
 
 
@@ -14,7 +15,7 @@ class Paint(Frame):
         self.canv = Canvas(self, bg="white")
         self.canv.grid(row=3, column=0, columnspan=7,
                        padx=5, pady=5, sticky=E+W+S+N)
-        self.figures = Figures.Figure.__subclasses__()
+        self.figures = Figure.Figure.__subclasses__()
         self.set_canvas()
         self.figure = "line"
         self.flag = False
@@ -37,6 +38,7 @@ class Paint(Frame):
             for i in self.figures:
                 if self.figure == i.__name__:
                     i.draw(self, event.x, event.y)
+            Figure.Serializer.serialize(self, event.x, event.y)
 
     def set_figure(self, figure):
         self.figure = figure

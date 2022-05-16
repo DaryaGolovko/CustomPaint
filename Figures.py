@@ -9,6 +9,11 @@ class Line(Figure):
                               fill=self.color, width=self.brush_size)
         self.x, self.y = x, y
 
+    @staticmethod
+    def serialization(self, x, y):
+        self.canv.create_line(self.x, self.y, x, y,
+                              fill=self.color, width=self.brush_size)
+
 
 class Ellipse(Figure):
 
