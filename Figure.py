@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import ast
 
 
 class Figure(ABC):
@@ -16,8 +17,6 @@ class Serializer:
     def serialize_figure(self, figure):
         d = {"type": figure.figure, "color": figure.color, "width": figure.brush_size, "coords": figure.coords}
         self.l.append(d)
-        print(self.l)
-        
 
     def serialize(self):
         result = {"figures": self.l}
@@ -26,10 +25,7 @@ class Serializer:
             file.write(str(result))
 
     @staticmethod
-    def deserialize(figure):
+    def deserialize() -> list:
         with open(r'example.json') as file:
-            restored = dict(file.read())
-            figure.figure = restored["type"]
-            figure.color = restored["color"]
-            figure.brush_size = restored["width"]
-            figure.coords = restored["coords"]
+            l = list(ast.literal_eval(file.read())["figures"])
+        return l

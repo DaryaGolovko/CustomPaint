@@ -10,20 +10,25 @@ class Paint(Frame):
         Frame.__init__(self, parent)
 
         self.parent = parent
+
         self.color = "black"
         self.brush_size = 2
         self.canv = Canvas(self, bg="white")
+        self.figure = "Line"
+        self.figures = Figure.__subclasses__()
+
         self.canv.grid(row=3, column=0, columnspan=7,
                        padx=5, pady=5, sticky=E+W+S+N)
-        self.figures = Figure.__subclasses__()
         self.set_canvas()
-        self.figure = "line"
+
         self.flag = False
         self.polyflag = 0
         self.x = 0
         self.y = 0
         self.coords = []
+
         self.obj = Serializer()
+        self.serialization = False
 
     def set_color(self, new_color):
         self.color = new_color
@@ -31,10 +36,23 @@ class Paint(Frame):
     def set_brush_size(self, new_size):
         self.brush_size = new_size
 
-    def deserializer(self):
+    def serialize(self):
+        self.serialization = True
         self.obj.serialize()
-        Serializer.deserialize(self)
-        self.draw_figure(self)
+        l = self.obj.deserialize()
+
+        for i in range(len(l)):
+            restored = dict(l[i])
+            self.figure = restored["type"]
+            self.color = restored["color"]
+            self.brush_size = restored["width"]
+            self.coords = restored["coords"]
+            self.flag = True
+            if self.figure == "Polygon":
+                self.polyflag = 2
+            self.draw_figure(self)
+
+        self.serialization = False
 
     def draw_figure(self, event):
         if not self.flag:
@@ -43,6 +61,20 @@ class Paint(Frame):
         else:
             for i in self.figures:
                 if self.figure == i.__name__:
+                    if not self.serialization:
+                        if self.polyflag == 2:
+                            self.polyflag = False
+                            self.flag = False
+                        elif self.polyflag == 1:
+                            self.coords.append(event.x)
+                            self.coords.append(event.y)
+                            break
+                        else:
+                            self.flag = False
+                            self.coords.append(self.x)
+                            self.coords.append(self.y)
+                            self.coords.append(event.x)
+                            self.coords.append(event.y)
                     i.draw(self, event.x, event.y)
 
             if self.polyflag != 1:
@@ -90,8 +122,8 @@ class Paint(Frame):
                            command=lambda: self.set_color("black"))
         black_btn.grid(row=0, column=4)
 
-        white_btn = Button(self, text="Pink", width=10,
-                           command=lambda: self.set_color("pink"))
+        white_btn = Button(self, text="Yellow", width=10,
+                           command=lambda: self.set_color("yellow"))
         white_btn.grid(row=0, column=5)
 
         clear_btn = Button(self, text="Clear all", width=10,
@@ -121,7 +153,7 @@ class Paint(Frame):
         ten_btn.grid(row=1, column=5)
 
         clear_btn = Button(self, text="Serialize", width=10,
-                           command=lambda: self.deserializer())
+                           command=lambda: self.serialize())
         clear_btn.grid(row=1, column=6, sticky=W)
 
         figure_lab = Label(self, text="Figure: ")
