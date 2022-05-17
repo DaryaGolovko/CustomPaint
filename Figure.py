@@ -17,6 +17,7 @@ class Serializer:
         d = {"type": figure.figure, "color": figure.color, "width": figure.brush_size, "coords": figure.coords}
         self.l.append(d)
         print(self.l)
+        
 
     def serialize(self):
         result = {"figures": self.l}
