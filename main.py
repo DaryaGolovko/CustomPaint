@@ -1,6 +1,6 @@
 from tkinter import *
 import Figures
-import Figure
+from Figure import Figure, Serializer
 from Plugin import Trapeze
 
 
@@ -15,7 +15,7 @@ class Paint(Frame):
         self.canv = Canvas(self, bg="white")
         self.canv.grid(row=3, column=0, columnspan=7,
                        padx=5, pady=5, sticky=E+W+S+N)
-        self.figures = Figure.Figure.__subclasses__()
+        self.figures = Figure.__subclasses__()
         self.set_canvas()
         self.figure = "line"
         self.flag = False
@@ -23,12 +23,18 @@ class Paint(Frame):
         self.x = 0
         self.y = 0
         self.coords = []
+        self.obj = Serializer()
 
     def set_color(self, new_color):
         self.color = new_color
 
     def set_brush_size(self, new_size):
         self.brush_size = new_size
+
+    def deserializer(self):
+        self.obj.serialize()
+        Serializer.deserialize(self)
+        self.draw_figure(self)
 
     def draw_figure(self, event):
         if not self.flag:
@@ -38,7 +44,10 @@ class Paint(Frame):
             for i in self.figures:
                 if self.figure == i.__name__:
                     i.draw(self, event.x, event.y)
-            Figure.Serializer.serialize(self, event.x, event.y)
+
+            if self.polyflag != 1:
+                self.obj.serialize_figure(self)
+                self.coords = []
 
     def set_figure(self, figure):
         self.figure = figure
@@ -109,13 +118,16 @@ class Paint(Frame):
 
         ten_btn = Button(self, text="Twenty", width=10,
                          command=lambda: self.set_brush_size(20))
-        ten_btn.grid(row=1, column=5, sticky=W)
+        ten_btn.grid(row=1, column=5)
+
+        clear_btn = Button(self, text="Serialize", width=10,
+                           command=lambda: self.deserializer())
+        clear_btn.grid(row=1, column=6, sticky=W)
 
         figure_lab = Label(self, text="Figure: ")
         figure_lab.grid(row=2, column=0, padx=2)
 
         counter = -1
-        l = [x.__name__ for x in self.figures]
         for i in self.figures:
             counter = counter + 1
             temp = Button(self, text=i.__name__, width=10,

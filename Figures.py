@@ -8,11 +8,10 @@ class Line(Figure):
         self.canv.create_line(self.x, self.y, x, y,
                               fill=self.color, width=self.brush_size)
         self.x, self.y = x, y
-
-    @staticmethod
-    def serialization(self, x, y):
-        self.canv.create_line(self.x, self.y, x, y,
-                              fill=self.color, width=self.brush_size)
+        self.coords.append(self.x)
+        self.coords.append(self.y)
+        self.coords.append(x)
+        self.coords.append(y)
 
 
 class Ellipse(Figure):
@@ -22,6 +21,10 @@ class Ellipse(Figure):
         self.flag = False
         self.canv.create_oval(self.x, self.y, x, y,
                               fill=self.color, outline=self.color)
+        self.coords.append(self.x)
+        self.coords.append(self.y)
+        self.coords.append(x)
+        self.coords.append(y)
 
 
 class Rectangle(Figure):
@@ -31,6 +34,10 @@ class Rectangle(Figure):
         self.flag = False
         self.canv.create_rectangle(self.x, self.y, x, y,
                                    fill=self.color, outline=self.color)
+        self.coords.append(self.x)
+        self.coords.append(self.y)
+        self.coords.append(x)
+        self.coords.append(y)
 
 
 class Polygon(Figure):
@@ -42,7 +49,6 @@ class Polygon(Figure):
                                      fill=self.color, outline=self.color)
             self.polyflag = False
             self.flag = False
-            self.coords = []
         elif self.polyflag == 1:
             self.coords.append(x)
             self.coords.append(y)
@@ -54,4 +60,8 @@ class LineSegment(Figure):
     def draw(self, x, y):
         self.flag = False
         self.canv.create_polygon(self.x, self.y, x, y,
-                                 fill=self.color, outline=self.color)
+                                 fill=self.color, outline=self.color, width=self.brush_size)
+        self.coords.append(self.x)
+        self.coords.append(self.y)
+        self.coords.append(x)
+        self.coords.append(y)

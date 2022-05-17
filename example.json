@@ -1,1 +1,1 @@
-{'type': 'Polygon', 'color': 'black', 'width': 2, 'coords': []}
+{'figures': [{'type': 'Rectangle', 'color': 'blue', 'width': 2, 'coords': [292, 104, 517, 267]}, {'type': 'Polygon', 'color': 'pink', 'width': 2, 'coords': [724, 90, 759, 270, 633, 283, 642, 141]}]}
