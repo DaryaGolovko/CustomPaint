@@ -1,7 +1,8 @@
 from tkinter import *
 import Figures
-from Figure import Figure, Serializer
+from Figure import Figure
 from Plugin import Trapeze
+from JsonSerializer import Serializer
 
 
 class Paint(Frame):
@@ -70,7 +71,8 @@ class Paint(Frame):
                             self.coords.append(event.y)
                             break
                         else:
-                            self.flag = False
+                            if self.figure != "Line":
+                                self.flag = False
                             self.coords.append(self.x)
                             self.coords.append(self.y)
                             self.coords.append(event.x)
