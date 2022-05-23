@@ -1,7 +1,7 @@
 from tkinter import *
 import Figures
 from Figure import Figure
-from Plugin import Trapeze
+import Plugin
 from JsonSerializer import Serializer
 
 
@@ -44,6 +44,8 @@ class Paint(Frame):
 
         for i in range(len(l)):
             restored = dict(l[i])
+            if self.figures.count(restored["type"]) != 0:
+                continue
             self.figure = restored["type"]
             self.color = restored["color"]
             self.brush_size = restored["width"]

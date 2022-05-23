@@ -1,10 +1,15 @@
 import ast
+import os
 
 
 class Serializer:
 
     def __init__(self):
-        self.l = []
+        if os.path.getsize(r'example.json') != 0:
+            with open(r'example.json') as file:
+                self.l = list(ast.literal_eval(file.read())["figures"])
+        else:
+            self.l = []
 
     def serialize_figure(self, figure):
         d = {"type": figure.figure, "color": figure.color, "width": figure.brush_size, "coords": figure.coords}
